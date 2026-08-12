@@ -1,0 +1,79 @@
+VILARI — Fotos da landing page
+================================
+
+Coloque os arquivos nesta pasta (fotos/) com os nomes exatos abaixo.
+Formato recomendado: JPG ou WebP, boa qualidade, otimizados para web.
+
+HERO
+----
+hero-arquitetura.jpg
+  Seção: abertura (hero)
+  Sugestão: foto ampla da clínica, arquitetura ou fachada
+  Proporção: paisagem, horizontal (ex.: 1920×1280 ou similar)
+
+FILOSOFIA
+---------
+atendimento.jpg
+  Seção: "Uma visão integrada do paciente"
+  Sugestão: atendimento, consulta ou acolhimento
+  Proporção: retrato (4:5)
+
+ABORDAGEM (carrossel — 3 cards)
+-------------------------------
+caso-desgaste.jpg
+  Card: Desgaste
+  Sugestão: imagem relacionada a desgaste, função ou investigação clínica
+  Proporção: retrato ou quadrado, ocupa card inteiro
+
+caso-dor.jpg
+  Card: Dor
+  Sugestão: imagem que remeta a investigação de sintoma/dor
+  Proporção: retrato ou quadrado
+
+caso-estetica.jpg
+  Card: Estética
+  Sugestão: estética dental com naturalidade, forma e função
+  Proporção: retrato ou quadrado
+
+CLÍNICA (galeria — 3 fotos)
+---------------------------
+clinica-principal.jpg
+  Galeria: foto principal
+  Sugestão: recepção ou vista geral do espaço
+  Proporção: retrato (4:5)
+
+clinica-detalhe.jpg
+  Galeria: detalhe
+  Sugestão: detalhe arquitetônico, material ou acabamento
+  Proporção: retrato (4:5)
+
+clinica-consultorio.jpg
+  Galeria: consultório
+  Sugestão: consultório ou sala de atendimento
+  Proporção: retrato (4:5)
+
+FUNDADORES
+----------
+vitor.jpg
+  Dr. Vitor Guimarães (primeiro na página)
+  Sugestão: retrato profissional, fundo neutro ou ambiente clínico
+  Proporção: retrato (3:4)
+
+samuel.jpg
+  Dr. Samuel Godoy (segundo na página)
+  Sugestão: retrato profissional, fundo neutro ou ambiente clínico
+  Proporção: retrato (3:4)
+
+INTEGRAÇÃO
+----------
+clinica-materiais.jpg
+  Seção: "Integração não é soma"
+  Sugestão: materiais, instrumentos ou detalhes clínicos
+  Proporção: retrato (4:5)
+
+---
+Total: 11 fotos
+
+Após adicionar os arquivos, abra vilari-landing-v2.html no navegador.
+Se alguma foto não existir ainda, a página exibe um placeholder colorido
+até o arquivo ser incluído nesta pasta.
