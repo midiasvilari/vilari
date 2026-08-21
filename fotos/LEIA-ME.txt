@@ -6,10 +6,11 @@ Formato recomendado: JPG ou WebP, boa qualidade, otimizados para web.
 
 HERO
 ----
-hero-arquitetura.jpg
+hero-sorriso.jpg
   Seção: abertura (hero)
-  Sugestão: foto ampla da clínica, arquitetura ou fachada
-  Proporção: paisagem, horizontal (ex.: 1920×1280 ou similar)
+  Sugestão: retrato emocional — pessoa sorrindo de forma natural e genuína
+  Proporção: retrato ou paisagem, com rosto visível (ex.: 1600×1200 ou similar)
+  Referência: foto grande à direita, expressão alegre, luz quente
 
 FILOSOFIA
 ---------
