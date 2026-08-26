@@ -57,7 +57,7 @@
       "alternateName": "VILARI",
       "description": "Clínica odontológica em Taubaté especializada em avaliação integrada, restauração, cirurgia, estética e diagnóstico odontológico.",
       "url": "https://vilari.vercel.app/",
-      "telephone": "+5512999999999",
+      "telephone": "+5512992280170",
       "email": "contato@vilari.com.br",
       "image": "https://vilari.vercel.app/fotos/hero-sorriso.jpg",
       "logo": "https://vilari.vercel.app/favicon.svg",
@@ -139,10 +139,9 @@
     {
       "@type": "Person",
       "@id": "https://vilari.vercel.app/#samuel",
-      "name": "Dr. Samuel Godoy",
-      "jobTitle": "Cirurgião-Dentista",
-      "worksFor": { "@id": "https://vilari.vercel.app/#clinic" },
-      "knowsAbout": ["Restauração dental", "Cirurgia odontológica", "Diagnóstico integrado"]
+      "name": "Samuel Godoy",
+      "jobTitle": "Sócio e Co-fundador",
+      "worksFor": { "@id": "https://vilari.vercel.app/#clinic" }
     }
   ]
 }
@@ -356,8 +355,8 @@
     .btn-outline:hover { background: var(--text); color: var(--white); border-color: var(--text); }
     .link:hover { gap: 12px; }
     .link-light:hover { color: #fff; }
-    .media:hover img { transform: scale(1.03); }
-    .case:hover .case-bg img { transform: scale(1.04); }
+    .media:hover img,
+    .media:hover video { transform: scale(1.03); }
     .btn-light:hover { background: #fff; }
     header.on-hero .nav-cta:hover {
       background: rgba(255, 255, 255, 0.18);
@@ -376,11 +375,16 @@
     overflow: hidden;
     background: var(--surface);
   }
-  .media img {
+  .media img,
+  .media video {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 1.2s var(--ease);
+  }
+  .media-video {
+    pointer-events: none;
+    user-select: none;
   }
   .media-fill {
     position: absolute;
@@ -411,8 +415,10 @@
   }
   .media-fill.tone-deep + .media-tag,
   .media:has(.tone-deep) .media-tag { color: rgba(255,255,255,0.4); }
-  .media img.loaded ~ .media-fill { display: none; }
-  .media img:not([src]), .media img[src=""] { display: none; }
+  .media img.loaded ~ .media-fill,
+  .media video.loaded ~ .media-fill { display: none; }
+  .media img:not([src]), .media img[src=""],
+  .media video:not([src]), .media video[src=""] { display: none; }
 
   /* ── NAV ── */
   header {
@@ -698,12 +704,17 @@
 
   /* ── HERO (editorial) ── */
   .hero {
-    --hero-dark: #131C22;
-    --hero-dark-mid: #1A2830;
+    --hero-dark: #0A0E10;
+    --hero-mid: #131C22;
+    --hero-accent: #2A4A57;
     --hero-text: #EDEAE4;
     position: relative;
     min-height: 100svh;
-    background: var(--hero-dark);
+    background:
+      radial-gradient(ellipse 90% 70% at 85% 12%, rgba(42, 74, 87, 0.32) 0%, transparent 52%),
+      radial-gradient(ellipse 55% 45% at 8% 88%, rgba(42, 74, 87, 0.16) 0%, transparent 48%),
+      radial-gradient(circle at 50% 115%, rgba(237, 234, 228, 0.05) 0%, transparent 40%),
+      linear-gradient(168deg, var(--hero-dark) 0%, var(--hero-mid) 44%, #1A2830 100%);
     overflow: hidden;
   }
   .hero-shell {
@@ -712,23 +723,56 @@
     display: flex;
     flex-direction: column;
   }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero-glow {
+    position: absolute;
+    top: -18%;
+    right: -8%;
+    width: min(72vw, 660px);
+    height: min(72vw, 660px);
+    background: radial-gradient(circle, rgba(42, 74, 87, 0.24) 0%, transparent 68%);
+    filter: blur(48px);
+  }
   .hero-arc {
     position: absolute;
     top: -18%;
     right: -22%;
     width: min(92vw, 520px);
     height: min(92vw, 520px);
-    border: 1px solid rgba(237, 234, 228, 0.07);
+    border: 1px solid rgba(237, 234, 228, 0.08);
     border-radius: 50%;
-    pointer-events: none;
     z-index: 1;
   }
   .hero-arc::before {
     content: '';
     position: absolute;
     inset: 18%;
-    border: 1px solid rgba(237, 234, 228, 0.04);
+    border: 1px solid rgba(237, 234, 228, 0.05);
     border-radius: 50%;
+  }
+  .hero-arc--secondary {
+    top: auto;
+    right: auto;
+    bottom: -28%;
+    left: -20%;
+    width: min(78vw, 460px);
+    height: min(78vw, 460px);
+    opacity: 0.55;
+    border-color: rgba(237, 234, 228, 0.06);
+  }
+  .hero-line-accent {
+    position: absolute;
+    top: clamp(18%, 22vh, 28%);
+    left: var(--inset-l);
+    width: 1px;
+    height: clamp(72px, 16vh, 140px);
+    background: linear-gradient(to bottom, transparent, rgba(237, 234, 228, 0.2), transparent);
   }
   .hero-grid {
     flex: 1;
@@ -736,35 +780,6 @@
     min-height: 100svh;
     z-index: 2;
   }
-  .hero-visual {
-    position: absolute;
-    inset: 0;
-    overflow: hidden;
-  }
-  .hero-visual::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, var(--hero-dark) 0%, rgba(19, 28, 34, 0.35) 42%, transparent 100%);
-    z-index: 1;
-    pointer-events: none;
-  }
-  .hero-photo {
-    width: 100%;
-    height: 100%;
-    min-height: 280px;
-  }
-  .hero-photo .media-fill {
-    background: linear-gradient(155deg, #3A3530 0%, #2A2520 45%, #1E1A17 100%);
-  }
-  .hero-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 62% 18%;
-  }
-  .hero-photo img.loaded ~ .media-fill { display: none; }
-  .hero-photo img:not([src]), .hero-photo img[src=""] { display: none; }
   .hero-copy {
     position: relative;
     z-index: 3;
@@ -925,140 +940,9 @@
   .split-copy .heading { margin-bottom: 24px; }
   .split-copy .body-lg + .body-lg { margin-top: 16px; }
 
-  /* ── CASES (mobile: horizontal swipe cards) ── */
-  .cases-header {
-    padding-bottom: 20px;
-  }
-  .cases-header .body-lg { font-size: 0.9375rem; margin-top: 8px; }
-  .cases-scroll-hint {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 16px;
-    font-size: 0.6875rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--text-light);
-  }
-  .cases-scroll-hint::after {
-    content: '→';
-    font-size: 0.875rem;
-    animation: nudgeRight 1.5s var(--ease) infinite;
-  }
   @keyframes nudgeRight {
     0%, 100% { transform: translateX(0); opacity: 0.5; }
     50% { transform: translateX(4px); opacity: 1; }
-  }
-  .cases {
-    padding-bottom: var(--section-y);
-    overflow: hidden;
-  }
-  .cases-track {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-snap-stop: normal;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    overscroll-behavior-y: auto;
-    touch-action: manipulation;
-    scrollbar-width: none;
-    gap: 12px;
-    padding-inline: var(--inset-l) var(--inset-r);
-    padding-bottom: 8px;
-    scroll-padding-inline-start: var(--inset-l);
-    scroll-padding-inline-end: var(--inset-r);
-  }
-  .cases-track::-webkit-scrollbar { display: none; }
-  .case {
-    position: relative;
-    flex: 0 0 min(88%, calc(100% - var(--pad)));
-    scroll-snap-align: start;
-    overflow: hidden;
-    min-height: 72svh;
-    border-radius: 16px;
-    display: flex;
-    align-items: flex-end;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    box-shadow: var(--glass-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-  }
-  .case-bg {
-    position: absolute;
-    inset: 0;
-  }
-  .case-bg .media-fill { height: 100%; }
-  .case-bg img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 1.4s var(--ease);
-  }
-  .case-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(15,20,22,0.82) 0%, rgba(15,20,22,0.25) 50%, rgba(15,20,22,0.05) 100%);
-  }
-  .case-content {
-    position: relative;
-    z-index: 2;
-    padding: clamp(24px, 5vw, 32px) clamp(20px, 4vw, 28px);
-    width: 100%;
-  }
-  .case-label {
-    font-size: 0.6875rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 12px;
-  }
-  .case-title {
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    color: #fff;
-    line-height: 1.15;
-    max-width: 22ch;
-    margin-bottom: 12px;
-    opacity: 0.95;
-    transform: translateY(8px);
-    transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
-  }
-  .case-desc {
-    font-size: 0.9375rem;
-    color: rgba(255,255,255,0.7);
-    max-width: 38ch;
-    line-height: 1.55;
-    opacity: 1;
-    transform: none;
-    transition: opacity 0.5s var(--ease) 0.05s, transform 0.5s var(--ease) 0.05s;
-  }
-  .case.in-view .case-desc,
-  .case:hover .case-desc { opacity: 1; transform: translateY(0); }
-  .case.in-view .case-title,
-  .case:hover .case-title { transform: translateY(0); opacity: 1; }
-  .case-title { opacity: 1; transform: none; }
-  @media (min-width: 768px) {
-    .case-title { opacity: 0.95; transform: translateY(8px); }
-  }
-
-  .cases-dots {
-    display: flex;
-    justify-content: center;
-    gap: 6px;
-    padding-top: 16px;
-  }
-  .cases-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 4px;
-    background: rgba(20,20,20,0.12);
-    transition: width 0.4s var(--spring), background 0.35s var(--ease), opacity 0.35s;
-  }
-  .cases-dot.active {
-    width: 22px;
-    background: var(--petrol);
   }
 
   /* ── METHOD (mobile: swipeable cards) ── */
@@ -1157,18 +1041,60 @@
     line-height: 1.6;
   }
 
-  /* ── CLINIC (mobile: horizontal gallery) ── */
+  /* ── CLÍNICA (espaço — foto principal vertical) ── */
   .clinic {
     padding: var(--section-y) 0;
     overflow: hidden;
+  }
+  .clinic-inner {
+    display: grid;
+    gap: 32px;
+    align-items: start;
   }
   .clinic-intro {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 28px;
+    max-width: 480px;
   }
-  .clinic-gallery {
+  .clinic-feature .media {
+    aspect-ratio: 3/4;
+    border-radius: 2px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: var(--glass-shadow), var(--glass-inset);
+  }
+
+  /* ── GALERIA (tratamentos) ── */
+  .gallery {
+    padding: var(--section-y) 0;
+    background: var(--surface);
+    overflow: hidden;
+  }
+  .gallery-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    max-width: 480px;
+  }
+  .gallery-scroll-hint {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-light);
+  }
+  .gallery-scroll-hint::after {
+    content: '→';
+    font-size: 0.875rem;
+    animation: nudgeRight 1.5s var(--ease) infinite;
+  }
+  .gallery-track {
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -1185,31 +1111,36 @@
     scroll-padding-inline-start: var(--inset-l);
     scroll-padding-inline-end: var(--inset-r);
   }
-  .clinic-gallery::-webkit-scrollbar { display: none; }
-  .clinic-main,
-  .clinic-row > div {
-    flex: 0 0 min(85vw, 360px);
+  .gallery-track::-webkit-scrollbar { display: none; }
+  .gallery-slide {
+    flex: 0 0 min(72vw, 280px);
     scroll-snap-align: start;
+    margin: 0;
   }
-  .clinic-row {
-    display: contents;
-  }
-  .clinic-main .media,
-  .clinic-row .media,
-  .clinic-detail .media {
+  .gallery-slide .media {
     aspect-ratio: 4/5;
-    border-radius: 12px;
+    border-radius: 2px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.35);
     box-shadow: var(--glass-shadow), var(--glass-inset);
   }
-  .clinic-caption {
-    margin-top: 28px;
-    font-size: 1.125rem;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    color: var(--text-muted);
-    max-width: 28ch;
+  .gallery-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+    padding-inline: var(--inset-l);
+  }
+  .gallery-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(20, 20, 20, 0.15);
+    transition: background 0.35s var(--ease), transform 0.35s var(--ease);
+  }
+  .gallery-dot.active {
+    background: var(--petrol);
+    transform: scale(1.15);
   }
 
   /* ── FOUNDERS ── */
@@ -1276,7 +1207,7 @@
   .integration-copy .heading { margin-bottom: 20px; }
   .integration-copy .body-lg + .body-lg { margin-top: 12px; }
   .integration-media .media {
-    aspect-ratio: 4/5;
+    aspect-ratio: 3/4;
     border-radius: 12px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.35);
@@ -1455,17 +1386,6 @@
     :root { --section-y: 84px; }
 
     .hero-grid { min-height: 100svh; }
-    .hero-visual::before {
-      background: linear-gradient(
-        to top,
-        var(--hero-dark) 0%,
-        rgba(19, 28, 34, 0.96) 30%,
-        rgba(19, 28, 34, 0.72) 48%,
-        rgba(19, 28, 34, 0.35) 68%,
-        rgba(19, 28, 34, 0.12) 100%
-      );
-    }
-    .hero-photo img { object-position: 50% 20%; }
     .hero-copy-inner {
       padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 8px);
       min-height: calc(100svh - env(safe-area-inset-bottom, 0px));
@@ -1503,12 +1423,6 @@
     .statement { padding-top: calc(var(--section-y) + 8px); }
     .split-inner { gap: 40px; }
     .split-copy .body-lg { font-size: 1.0625rem; line-height: 1.7; }
-
-    .clinic-gallery {
-      scroll-snap-stop: normal;
-      overscroll-behavior-y: auto;
-      touch-action: manipulation;
-    }
 
     .hero-scroll-hint { display: none; }
 
@@ -1572,10 +1486,6 @@
     }
     .hero-actions .btn-hero { width: auto; }
     .hero-actions .link { justify-content: flex-start; }
-    .hero-visual::before {
-      background: linear-gradient(to right, var(--hero-dark) 0%, rgba(19, 28, 34, 0.5) 35%, rgba(19, 28, 34, 0.15) 62%, transparent 100%);
-    }
-    .hero-photo img { object-position: 58% 22%; }
     .hero-arc {
       top: -12%;
       right: 8%;
@@ -1602,36 +1512,6 @@
     }
     .split { padding: clamp(64px, 10vh, 120px) 0; }
     .split-media .media { border-radius: 0; border: none; box-shadow: none; }
-
-    .cases-header { display: none; }
-    .cases-scroll-hint { display: none; }
-    .cases-dots { display: none; }
-    .cases { padding-bottom: clamp(64px, 10vh, 120px); overflow: visible; }
-    .cases-track {
-      display: block;
-      overflow: visible;
-      padding: 0;
-      gap: 0;
-    }
-    .case {
-      flex: none;
-      width: 100%;
-      border-radius: 0;
-      border: none;
-      box-shadow: none;
-      min-height: clamp(420px, 70vh, 680px);
-      margin-bottom: 4px;
-      scroll-snap-align: none;
-    }
-    .case-content {
-      padding: clamp(32px, 5vw, 56px);
-      max-width: var(--max);
-      margin: 0 auto;
-    }
-    .case-desc { opacity: 0; transform: translateY(12px); }
-    .case.in-view .case-desc,
-    .case:hover .case-desc { opacity: 1; transform: translateY(0); }
-    .case-title { opacity: 0.95; transform: translateY(8px); }
 
     .method { padding: clamp(64px, 10vh, 120px) 0; overflow: visible; }
     .method-header { margin-bottom: clamp(40px, 6vh, 64px); }
@@ -1699,24 +1579,39 @@
     }
 
     .clinic { padding: clamp(64px, 10vh, 120px) 0; }
-    .clinic-intro { margin-bottom: clamp(40px, 6vh, 64px); max-width: 480px; }
-    .clinic-gallery {
+    .clinic-inner {
+      grid-template-columns: 1fr minmax(280px, 400px);
+      gap: clamp(32px, 5vw, 64px);
+      align-items: center;
+    }
+    .clinic-feature .media {
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+    }
+
+    .gallery { padding: clamp(64px, 10vh, 120px) 0; }
+    .gallery-scroll-hint { display: none; }
+    .gallery-dots { display: none; }
+    .gallery-header { margin-bottom: clamp(32px, 5vh, 48px); }
+    .gallery-track {
       display: grid;
-      gap: clamp(12px, 2vw, 20px);
-      margin: 0;
-      padding: 0;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(16px, 2vw, 24px);
       overflow: visible;
+      max-width: var(--max);
+      margin-inline: auto;
+      padding-inline: var(--inset-l);
     }
-    .clinic-main,
-    .clinic-row > div { flex: none; scroll-snap-align: none; }
-    .clinic-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(12px, 2vw, 20px);
+    .gallery-slide {
+      flex: none;
+      scroll-snap-align: none;
     }
-    .clinic-main .media,
-    .clinic-row .media { border-radius: 0; }
-    .clinic-caption { margin-top: clamp(32px, 5vh, 48px); font-size: clamp(1.125rem, 2vw, 1.5rem); }
+    .gallery-slide .media {
+      border-radius: 0;
+      border: none;
+      box-shadow: none;
+    }
 
     .founders { padding: clamp(64px, 10vh, 120px) 0; }
     .founders-header { margin-bottom: clamp(40px, 6vh, 56px); }
@@ -1730,10 +1625,7 @@
       align-items: center;
     }
     .integration { padding: clamp(64px, 10vh, 120px) 0; }
-    .integration-media .media { aspect-ratio: 5/4; border-radius: 0; border: none; box-shadow: none; }
-    .clinic-main .media,
-    .clinic-row .media { border-radius: 0; border: none; box-shadow: none; }
-
+    .integration-media .media { aspect-ratio: 3/4; border-radius: 0; border: none; box-shadow: none; }
     .cta-final {
       padding: clamp(80px, 14vh, 140px) 0;
       text-align: center;
@@ -1746,9 +1638,6 @@
     .split.reverse .split-inner > * { direction: ltr; }
     .founders-grid { grid-template-columns: 1fr auto 1fr; gap: clamp(24px, 4vw, 48px); align-items: center; }
     .founders-bridge { padding: 0; margin: 0; align-self: center; }
-    .clinic-gallery { grid-template-columns: 1.4fr 1fr; grid-template-rows: auto auto; }
-    .clinic-main { grid-row: span 2; }
-    .clinic-main .media { aspect-ratio: auto; height: 100%; min-height: 520px; }
     footer .wrap {
       flex-direction: row;
       justify-content: space-between;
@@ -1766,11 +1655,6 @@
       border-radius: 100px;
       padding-inline: 32px;
       transition: background 0.35s var(--spring-soft), transform 0.2s var(--spring), box-shadow 0.35s, border-color 0.35s;
-    }
-    .hero-photo img {
-      will-change: transform;
-      transform: scale(1.04);
-      transition: none;
     }
 
     .statement .display.reveal { transition-delay: 0s; }
@@ -1796,13 +1680,6 @@
     }
     .founder-name { transition: color 0.4s var(--ease); }
 
-    /* Cases full-bleed */
-    .case-content {
-      padding-inline: var(--inset-l);
-    }
-    .case.in-view .case-title,
-    .case:hover .case-title { opacity: 1; transform: translateY(0); }
-
     /* CTA & footer */
     .cta-final .btn {
       border-radius: 100px;
@@ -1818,6 +1695,8 @@
     /* Founders hover */
     .founder .media img { transition: transform 1.4s var(--ease); }
     .founder:hover .media img { transform: scale(1.02); }
+    .gallery-slide .media img { transition: transform 1.4s var(--ease); }
+    .gallery-slide:hover .media img { transform: scale(1.02); }
 
     header.scrolled {
       box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 8px 32px rgba(15, 20, 22, 0.04);
@@ -1912,11 +1791,11 @@
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; transition: none; }
     .hero .reveal { transition-delay: 0s !important; }
-    .media img, .case-bg img { transition: none; }
-    .case-desc { opacity: 1; transform: none; }
+    .media img,
+    .media video { transition: none; }
     .method-step { opacity: 1; transform: none; }
     .hero-scroll-hint span,
-    .cases-scroll-hint::after { animation: none; }
+    .gallery-scroll-hint::after { animation: none; }
     .mobile-nav.open .mobile-nav-panel > a { animation: none; }
     .mobile-cta { transition: none; opacity: 1; }
     .mobile-cta:not(.visible) { opacity: 0; }
@@ -1981,7 +1860,12 @@
 <main id="conteudo">
 <section class="hero" id="visao" aria-label="Clínica odontológica em Taubaté">
   <div class="hero-shell">
-    <div class="hero-arc" aria-hidden="true"></div>
+    <div class="hero-bg" aria-hidden="true">
+      <div class="hero-glow"></div>
+      <div class="hero-arc"></div>
+      <div class="hero-arc hero-arc--secondary"></div>
+      <span class="hero-line-accent"></span>
+    </div>
     <div class="hero-grid">
       <div class="hero-copy">
         <div class="hero-copy-inner wrap">
@@ -2002,12 +1886,6 @@
             <span class="hero-line">sorrir</span>
             <span class="hero-line hero-line--last">faz bem.</span>
           </p>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="hero-photo media">
-          <img src="fotos/hero-sorriso.jpg" alt="Paciente sorrindo na clínica odontológica VILARI em Taubaté" width="1600" height="1200" fetchpriority="high">
-          <div class="media-fill tone-warm"></div>
         </div>
       </div>
     </div>
@@ -2044,62 +1922,7 @@
   </div>
 </section>
 
-<!-- 04 MOSTRAR -->
-<section class="cases" id="abordagem" aria-label="Abordagem clínica">
-  <div class="cases-header wrap reveal">
-    <p class="eyebrow">Abordagem</p>
-    <h2 class="heading">Três formas de olhar.</h2>
-    <p class="cases-scroll-hint">Deslize para ver</p>
-  </div>
-  <div class="cases-track" id="casesTrack">
-  <article class="case" data-case>
-    <div class="case-bg media">
-      <img src="fotos/caso-desgaste.jpg" alt="Tratamento de desgaste dental — dentista Taubaté VILARI" loading="lazy">
-      <div class="media-fill tone-cool"></div>
-      <span class="media-tag">Desgaste</span>
-    </div>
-    <div class="case-overlay"></div>
-    <div class="case-content">
-      <p class="case-label">Desgaste</p>
-      <h3 class="case-title">Nem todo desgaste começa no dente.</h3>
-      <p class="case-desc">Função, oclusão e hábitos fazem parte da investigação — antes de qualquer restauração.</p>
-    </div>
-  </article>
-  <article class="case" data-case>
-    <div class="case-bg media">
-      <img src="fotos/caso-dor.jpg" alt="Investigação de dor odontológica — clínica em Taubaté" loading="lazy">
-      <div class="media-fill tone-warm"></div>
-      <span class="media-tag">Dor</span>
-    </div>
-    <div class="case-overlay"></div>
-    <div class="case-content">
-      <p class="case-label">Dor</p>
-      <h3 class="case-title">O sintoma é o início da investigação, não necessariamente a resposta.</h3>
-      <p class="case-desc">A dor indica onde olhar — não necessariamente o que fazer.</p>
-    </div>
-  </article>
-  <article class="case" data-case>
-    <div class="case-bg media">
-      <img src="fotos/caso-estetica.jpg" alt="Estética dental com função — VILARI Taubaté" loading="lazy">
-      <div class="media-fill tone-deep"></div>
-      <span class="media-tag">Estética</span>
-    </div>
-    <div class="case-overlay"></div>
-    <div class="case-content">
-      <p class="case-label">Estética</p>
-      <h3 class="case-title">Estética precisa fazer sentido dentro da função.</h3>
-      <p class="case-desc">Resultado duradouro exige que forma e função caminhem juntas.</p>
-    </div>
-  </article>
-  </div>
-  <div class="cases-dots" id="casesDots" aria-hidden="true">
-    <span class="cases-dot active"></span>
-    <span class="cases-dot"></span>
-    <span class="cases-dot"></span>
-  </div>
-</section>
-
-<!-- 05 MÉTODO -->
+<!-- 04 MÉTODO -->
 <section class="method" id="metodo">
   <div class="method-header wrap reveal">
     <h2 class="heading">Como trabalhamos.</h2>
@@ -2153,42 +1976,57 @@
 
 <!-- 06 CLÍNICA -->
 <section class="clinic" id="clinica">
-  <div class="wrap">
+  <div class="wrap clinic-inner">
     <div class="clinic-intro reveal">
       <p class="eyebrow">O espaço</p>
       <h2 class="heading">Um ambiente pensado para receber com calma.</h2>
       <p class="body-lg">Clínica odontológica em Taubaté com espaço pensado para acolher, investigar e tratar com tranquilidade.</p>
     </div>
-    <div class="clinic-gallery">
-      <div class="clinic-main reveal">
-        <div class="media">
-          <img src="fotos/clinica-principal.jpg" alt="Recepção da clínica odontológica VILARI em Taubaté" loading="lazy">
-          <div class="media-fill tone-warm"></div>
-          <span class="media-tag">Recepção</span>
-        </div>
-      </div>
-      <div class="clinic-row">
-        <div class="reveal">
-          <div class="media">
-            <img src="fotos/clinica-detalhe.jpg" alt="Detalhe da clínica odontológica VILARI, Taubaté" loading="lazy">
-            <div class="media-fill tone-cool"></div>
-            <span class="media-tag">Detalhe</span>
-          </div>
-        </div>
-        <div class="reveal">
-          <div class="media">
-            <img src="fotos/clinica-consultorio.jpg" alt="Consultório odontológico VILARI em Taubaté" loading="lazy">
-            <div class="media-fill tone-warm"></div>
-            <span class="media-tag">Consultório</span>
-          </div>
-        </div>
+
+    <div class="clinic-feature reveal">
+      <div class="media">
+        <img src="fotos/clinica-principal.jpg" alt="Recepção da clínica odontológica VILARI em Taubaté" loading="lazy">
+        <div class="media-fill tone-warm"></div>
       </div>
     </div>
-    <p class="clinic-caption reveal">Precisão também está no ambiente.</p>
   </div>
 </section>
 
-<!-- 07 FUNDADORES -->
+<!-- 07 GALERIA -->
+<section class="gallery" id="galeria">
+  <div class="wrap gallery-header reveal">
+    <p class="eyebrow">Galeria clínica</p>
+    <h2 class="heading">Tratamentos em detalhe.</h2>
+    <p class="gallery-scroll-hint">Deslize para ver</p>
+  </div>
+  <div class="gallery-track" id="galleryTrack">
+    <figure class="gallery-slide reveal">
+      <div class="media">
+        <img src="fotos/galeria-restauracao.jpg" alt="Restauração dental — tratamento odontológico VILARI, Taubaté" loading="lazy">
+        <div class="media-fill tone-warm"></div>
+      </div>
+    </figure>
+    <figure class="gallery-slide reveal">
+      <div class="media">
+        <img src="fotos/galeria-estetica.jpg" alt="Estética dental — tratamento VILARI em Taubaté" loading="lazy">
+        <div class="media-fill tone-cool"></div>
+      </div>
+    </figure>
+    <figure class="gallery-slide reveal">
+      <div class="media">
+        <img src="fotos/galeria-detalhe.jpg" alt="Detalhe de procedimento odontológico — VILARI Taubaté" loading="lazy">
+        <div class="media-fill tone-warm"></div>
+      </div>
+    </figure>
+  </div>
+  <div class="gallery-dots wrap" id="galleryDots" aria-hidden="true">
+    <span class="gallery-dot active"></span>
+    <span class="gallery-dot"></span>
+    <span class="gallery-dot"></span>
+  </div>
+</section>
+
+<!-- 08 FUNDADORES -->
 <section class="founders" id="fundadores">
   <div class="wrap">
     <div class="founders-header reveal">
@@ -2210,14 +2048,14 @@
       <p class="founders-bridge reveal">Duas perspectivas.<br>Uma mesma forma de enxergar.</p>
       <article class="founder reveal">
         <div class="media">
-          <img src="fotos/samuel.jpg" alt="Dr. Samuel Godoy, cirurgião-dentista na VILARI Taubaté" loading="lazy">
+          <img src="fotos/samuel.jpg" alt="Samuel Godoy, sócio e co-fundador da VILARI Taubaté" loading="lazy">
           <div class="media-fill tone-warm"></div>
-          <span class="media-tag">Dr. Samuel Godoy</span>
+          <span class="media-tag">Samuel Godoy</span>
         </div>
         <div>
-          <h3 class="founder-name">Dr. Samuel Godoy</h3>
-          <p class="founder-role">Cirurgião-Dentista</p>
-          <p class="founder-bio">Restaurações, cirurgia e diagnóstico integrado — precisão clínica construída a partir da compreensão do caso.</p>
+          <h3 class="founder-name">Samuel Godoy</h3>
+          <p class="founder-role">Sócio · Co-fundador</p>
+          <p class="founder-bio">Visão, estratégia e experiência do paciente — porque construir a VILARI também exige cuidado com o que está além do consultório.</p>
         </div>
       </article>
     </div>
@@ -2234,7 +2072,19 @@
   </div>
   <div class="integration-media reveal">
     <div class="media">
-      <img src="fotos/clinica-materiais.jpg" alt="Materiais odontológicos — clínica VILARI Taubaté" loading="lazy">
+      <video
+        class="media-video"
+        src="fotos/clinica-materiais.mp4"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        disablepictureinpicture
+        disableremoteplayback
+        tabindex="-1"
+        aria-hidden="true"
+      ></video>
       <div class="media-fill tone-deep"></div>
       <span class="media-tag">Materiais</span>
     </div>
@@ -2272,9 +2122,9 @@
   <div class="wrap">
     <h2 class="display reveal">Seu caso começa antes do tratamento.</h2>
     <p class="body-lg reveal">Agende uma avaliação e conte-nos o que está acontecendo.</p>
-    <a href="https://wa.me/5512999999999" class="btn btn-light reveal">Agendar avaliação <span class="icon">↗</span></a>
+    <a href="https://wa.me/5512992280170" class="btn btn-light reveal">Agendar avaliação <span class="icon">↗</span></a>
     <br>
-    <a href="https://wa.me/5512999999999" class="link reveal">WhatsApp</a>
+    <a href="https://wa.me/5512992280170" class="link reveal">WhatsApp</a>
   </div>
 </section>
 </main>
@@ -2287,12 +2137,12 @@
       <p itemprop="description">Clínica odontológica · Dentista em Taubaté, SP</p>
       <address class="footer-nap" itemprop="address" itemscope itemtype="https://schema.org/PostalAddress">
         <span itemprop="addressLocality">Taubaté</span>, <span itemprop="addressRegion">SP</span> · <span itemprop="addressCountry">Brasil</span><br>
-        <a href="tel:+5512999999999" itemprop="telephone">(12) 99999-9999</a>
+        <a href="tel:+5512992280170" itemprop="telephone">(12) 99228-0170</a>
       </address>
     </div>
     <div class="footer-links">
       <a href="https://instagram.com/vilari" target="_blank" rel="noopener noreferrer" itemprop="sameAs">Instagram</a>
-      <a href="https://wa.me/5512999999999">WhatsApp</a>
+      <a href="https://wa.me/5512992280170">WhatsApp</a>
       <a href="https://maps.google.com/?q=VILARI+Cl%C3%ADnica+Odontol%C3%B3gica+Taubat%C3%A9+SP" target="_blank" rel="noopener noreferrer">Localização</a>
     </div>
     <p class="footer-copy">© 2026 VILARI · <span itemprop="areaServed">Taubaté</span></p>
@@ -2303,7 +2153,7 @@
   <a href="#contato" class="btn">Agendar avaliação</a>
 </div>
 
-<a href="https://wa.me/5512999999999" class="wa-fab" aria-label="Agendar consulta odontológica pelo WhatsApp">
+<a href="https://wa.me/5512992280170" class="wa-fab" aria-label="Agendar consulta odontológica pelo WhatsApp">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
@@ -2313,7 +2163,6 @@
 
   const header = document.getElementById('header');
   const hero = document.querySelector('.hero');
-  const heroBgImg = document.querySelector('.hero-photo img');
   const mobileCta = document.getElementById('mobileCta');
   const navLinks = document.querySelectorAll('.nav-link');
   const navSections = ['visao', 'metodo', 'clinica', 'fundadores']
@@ -2323,7 +2172,6 @@
   const isMobile = window.matchMedia('(max-width: 767px)');
   const isDesktopNav = window.matchMedia('(min-width: 900px)');
   let scrollLockY = 0;
-  let parallaxRaf = 0;
 
   function setMenuOpen(open) {
     const mobileNav = document.getElementById('mobileNav');
@@ -2373,18 +2221,6 @@
     });
   }
 
-  function updateHeroParallax() {
-    if (reduced || isMobile.matches || !heroBgImg || !hero) return;
-    cancelAnimationFrame(parallaxRaf);
-    parallaxRaf = requestAnimationFrame(() => {
-      const heroH = hero.offsetHeight;
-      const scrollY = window.scrollY;
-      if (scrollY >= heroH) return;
-      const progress = scrollY / heroH;
-      heroBgImg.style.transform = `scale(${1.04 + progress * 0.04}) translateY(${scrollY * 0.22}px)`;
-    });
-  }
-
   function updateHeader() {
     const heroBottom = hero.offsetHeight;
     const scrollY = window.scrollY;
@@ -2405,13 +2241,9 @@
     }
 
     updateActiveNav();
-    updateHeroParallax();
   }
   window.addEventListener('scroll', updateHeader, { passive: true });
-  isMobile.addEventListener('change', () => {
-    if (heroBgImg) heroBgImg.style.transform = isMobile.matches ? '' : 'scale(1.04)';
-    updateHeader();
-  });
+  isMobile.addEventListener('change', updateHeader);
   isDesktopNav.addEventListener('change', updateActiveNav);
   updateHeader();
 
@@ -2481,39 +2313,19 @@
     });
   }
 
-  /* Cases — desktop in-view; mobile scroll dots */
-  const casesTrack = document.getElementById('casesTrack');
-  const casesDots = document.querySelectorAll('.cases-dot');
-  const cases = document.querySelectorAll('[data-case]');
-  let caseObs = null;
+  /* Gallery — mobile scroll dots */
+  const galleryTrack = document.getElementById('galleryTrack');
+  const galleryDots = document.querySelectorAll('.gallery-dot');
 
-  function bindCaseInteraction() {
-    if (caseObs) {
-      cases.forEach(el => caseObs.unobserve(el));
-      caseObs.disconnect();
-      caseObs = null;
-      cases.forEach(el => el.classList.remove('in-view'));
-    }
-    if (!isMobile.matches) {
-      caseObs = new IntersectionObserver((entries) => {
-        entries.forEach(e => e.target.classList.toggle('in-view', e.isIntersecting));
-      }, { threshold: 0.45 });
-      cases.forEach(el => caseObs.observe(el));
-    }
-  }
-
-  bindCaseInteraction();
-  isMobile.addEventListener('change', bindCaseInteraction);
-
-  if (casesTrack && casesDots.length) {
-    let casesScrollRaf = 0;
-    casesTrack.addEventListener('scroll', () => {
+  if (galleryTrack && galleryDots.length) {
+    let galleryScrollRaf = 0;
+    galleryTrack.addEventListener('scroll', () => {
       if (!isMobile.matches) return;
-      cancelAnimationFrame(casesScrollRaf);
-      casesScrollRaf = requestAnimationFrame(() => {
-        const cardWidth = casesTrack.querySelector('.case')?.offsetWidth || 1;
-        const index = Math.round(casesTrack.scrollLeft / (cardWidth + 12));
-        casesDots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+      cancelAnimationFrame(galleryScrollRaf);
+      galleryScrollRaf = requestAnimationFrame(() => {
+        const slideWidth = galleryTrack.querySelector('.gallery-slide')?.offsetWidth || 1;
+        const index = Math.round(galleryTrack.scrollLeft / (slideWidth + 12));
+        galleryDots.forEach((dot, i) => dot.classList.toggle('active', i === index));
       });
     }, { passive: true });
   }
@@ -2608,13 +2420,12 @@
   }
 
   bindCarouselScroll([
-    casesTrack,
     methodTrack,
-    document.querySelector('.clinic-gallery')
+    galleryTrack
   ]);
 
-  /* Media: show placeholder until image loads */
-  document.querySelectorAll('.media img, .hero-photo img').forEach(img => {
+  /* Media: show placeholder until image or video loads */
+  document.querySelectorAll('.media img').forEach(img => {
     const src = img.getAttribute('src');
     if (!src) return;
     const fill = img.parentElement.querySelector('.media-fill');
@@ -2631,6 +2442,33 @@
     img.addEventListener('error', onError);
     if (img.complete && img.naturalWidth) onLoad();
     else if (img.complete) onError();
+  });
+
+  document.querySelectorAll('.media video').forEach(video => {
+    const fill = video.parentElement.querySelector('.media-fill');
+    const onReady = () => {
+      video.classList.add('loaded');
+      if (fill) fill.style.display = 'none';
+    };
+    const onError = () => {
+      video.classList.remove('loaded');
+      video.style.display = 'none';
+      if (fill) fill.style.display = '';
+    };
+
+    video.controls = false;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute('muted', '');
+
+    video.addEventListener('loadeddata', onReady);
+    video.addEventListener('error', onError);
+    if (video.readyState >= 2) onReady();
+
+    const keepPlaying = () => video.play().catch(() => {});
+    keepPlaying();
+    video.addEventListener('loadeddata', keepPlaying);
   });
 })();
 </script>

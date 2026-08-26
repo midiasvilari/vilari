@@ -18,17 +18,18 @@ atendimento.jpg
   Sugestão: atendimento, consulta ou acolhimento
   Proporção: retrato (4:5)
 
-ABORDAGEM (carrossel — 3 cards)
--------------------------------
-caso-desgaste.jpg
-caso-dor.jpg
-caso-estetica.jpg
-
-CLÍNICA (galeria — 3 fotos)
----------------------------
+CLÍNICA (espaço — 1 foto)
+-------------------------
 clinica-principal.jpg
-clinica-detalhe.jpg
-clinica-consultorio.jpg
+  Seção: "O espaço" — única foto do ambiente
+  Sugestão: recepção ou vista principal da clínica
+  Proporção: retrato (3:4), sempre vertical
+
+GALERIA CLÍNICA — Tratamentos (3 fotos, retrato 4:5)
+-----------------------------------------------------
+galeria-restauracao.jpg   Restauração dental
+galeria-estetica.jpg      Estética dental
+galeria-detalhe.jpg       Detalhe de procedimento
 
 FUNDADORES
 ----------
@@ -37,10 +38,13 @@ samuel.jpg
 
 INTEGRAÇÃO
 ----------
-clinica-materiais.jpg
+clinica-materiais.mp4
+  Seção: "Integração não é soma"
+  Vídeo vertical (3:4 ou 9:16), sem áudio
+  Formato: MP4, otimizado para web
 
 ---
-Total: 11 fotos
+Total: 7 fotos + 1 vídeo
 
 Após adicionar os arquivos, abra index.html no navegador.
 Se alguma foto não existir ainda, a página exibe um placeholder colorido.
@@ -52,7 +56,7 @@ Antes de publicar, atualize estes arquivos com os dados reais da clínica:
 1. seo.config.json — URL, telefone, e-mail, endereço, horários
 2. index.html (head) — canonical, Open Graph, JSON-LD (mesmos dados)
 3. robots.txt e sitemap.xml — troque https://vilari.vercel.app pelo domínio final
-4. WhatsApp e telefone no HTML — busque por 5512999999999
+4. WhatsApp e telefone no HTML — busque por 5512992280170
 
 Checklist pós-deploy:
 - Google Search Console: adicionar propriedade e enviar sitemap.xml
