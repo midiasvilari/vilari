@@ -2,15 +2,14 @@ VILARI — Fotos da landing page
 ================================
 
 Coloque os arquivos nesta pasta (fotos/) com os nomes exatos abaixo.
-Formato recomendado: JPG ou WebP, boa qualidade, otimizados para web.
+Formato recomendado: JPG ou WebP, boa qualidade, otimizados para web (< 300 KB cada).
 
 HERO
 ----
 hero-sorriso.jpg
-  Seção: abertura (hero)
+  Seção: abertura (hero) — também usada em Open Graph / redes sociais
   Sugestão: retrato emocional — pessoa sorrindo de forma natural e genuína
-  Proporção: retrato ou paisagem, com rosto visível (ex.: 1600×1200 ou similar)
-  Referência: foto grande à direita, expressão alegre, luz quente
+  Proporção: 1600×1200 (paisagem) ou similar, rosto visível, luz quente
 
 FILOSOFIA
 ---------
@@ -22,59 +21,43 @@ atendimento.jpg
 ABORDAGEM (carrossel — 3 cards)
 -------------------------------
 caso-desgaste.jpg
-  Card: Desgaste
-  Sugestão: imagem relacionada a desgaste, função ou investigação clínica
-  Proporção: retrato ou quadrado, ocupa card inteiro
-
 caso-dor.jpg
-  Card: Dor
-  Sugestão: imagem que remeta a investigação de sintoma/dor
-  Proporção: retrato ou quadrado
-
 caso-estetica.jpg
-  Card: Estética
-  Sugestão: estética dental com naturalidade, forma e função
-  Proporção: retrato ou quadrado
 
 CLÍNICA (galeria — 3 fotos)
 ---------------------------
 clinica-principal.jpg
-  Galeria: foto principal
-  Sugestão: recepção ou vista geral do espaço
-  Proporção: retrato (4:5)
-
 clinica-detalhe.jpg
-  Galeria: detalhe
-  Sugestão: detalhe arquitetônico, material ou acabamento
-  Proporção: retrato (4:5)
-
 clinica-consultorio.jpg
-  Galeria: consultório
-  Sugestão: consultório ou sala de atendimento
-  Proporção: retrato (4:5)
 
 FUNDADORES
 ----------
 vitor.jpg
-  Dr. Vitor Guimarães (primeiro na página)
-  Sugestão: retrato profissional, fundo neutro ou ambiente clínico
-  Proporção: retrato (3:4)
-
 samuel.jpg
-  Dr. Samuel Godoy (segundo na página)
-  Sugestão: retrato profissional, fundo neutro ou ambiente clínico
-  Proporção: retrato (3:4)
 
 INTEGRAÇÃO
 ----------
 clinica-materiais.jpg
-  Seção: "Integração não é soma"
-  Sugestão: materiais, instrumentos ou detalhes clínicos
-  Proporção: retrato (4:5)
 
 ---
 Total: 11 fotos
 
-Após adicionar os arquivos, abra vilari-landing-v2.html no navegador.
-Se alguma foto não existir ainda, a página exibe um placeholder colorido
-até o arquivo ser incluído nesta pasta.
+Após adicionar os arquivos, abra index.html no navegador.
+Se alguma foto não existir ainda, a página exibe um placeholder colorido.
+
+SEO E DEPLOY (VERCEL)
+=====================
+Antes de publicar, atualize estes arquivos com os dados reais da clínica:
+
+1. seo.config.json — URL, telefone, e-mail, endereço, horários
+2. index.html (head) — canonical, Open Graph, JSON-LD (mesmos dados)
+3. robots.txt e sitemap.xml — troque https://vilari.vercel.app pelo domínio final
+4. WhatsApp e telefone no HTML — busque por 5512999999999
+
+Checklist pós-deploy:
+- Google Search Console: adicionar propriedade e enviar sitemap.xml
+- Google Business Profile: criar/verificar ficha "dentista Taubaté"
+- Instagram linkado e NAP idêntico (nome, endereço, telefone) em todos os lugares
+- Pedir avaliações de pacientes no Google (sinal local forte)
+
+Entrada do site na Vercel: index.html na raiz do projeto.
