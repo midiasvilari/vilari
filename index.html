@@ -418,8 +418,7 @@
   .media:has(.tone-deep) .media-tag { color: rgba(255,255,255,0.4); }
   .media img.loaded ~ .media-fill,
   .media video.loaded ~ .media-fill { display: none; }
-  .media img:not([src]), .media img[src=""],
-  .media video:not([src]), .media video[src=""] { display: none; }
+  .media img:not([src]), .media img[src=""] { display: none; }
 
   /* ── NAV ── */
   header {
@@ -1098,14 +1097,14 @@
   .gallery-track {
     display: flex;
     overflow-x: auto;
-    overflow-y: hidden;
     scroll-snap-type: x mandatory;
     scroll-snap-stop: normal;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
+    touch-action: manipulation;
     scrollbar-width: none;
     gap: 12px;
-    margin-inline: calc(var(--inset-l) * -1) calc(var(--inset-r) * -1);
     padding-inline: var(--inset-l) var(--inset-r);
     padding-bottom: 4px;
     scroll-padding-inline-start: var(--inset-l);
@@ -1113,7 +1112,7 @@
   }
   .gallery-track::-webkit-scrollbar { display: none; }
   .gallery-slide {
-    flex: 0 0 min(72vw, 280px);
+    flex: 0 0 min(82vw, 300px);
     scroll-snap-align: start;
     margin: 0;
   }
@@ -2082,6 +2081,7 @@
     <div class="media">
       <video
         class="media-video"
+        src="fotos/clinica-materiais.mp4"
         autoplay
         muted
         loop
@@ -2092,9 +2092,7 @@
         disableremoteplayback
         tabindex="-1"
         aria-hidden="true"
-      >
-        <source src="fotos/clinica-materiais.mp4" type="video/mp4">
-      </video>
+      ></video>
       <div class="media-fill tone-deep"></div>
       <span class="media-tag">Materiais</span>
     </div>
@@ -2394,7 +2392,7 @@
   isDesktopNav.addEventListener('change', bindMethodInteraction);
   if (reduced) steps.forEach(s => s.classList.add('active'));
 
-  /* Carrosséis — priorizar scroll vertical da página no mobile */
+  /* Carrosséis — não bloquear scroll vertical no mobile */
   function bindCarouselScroll(tracks) {
     tracks.forEach(track => {
       if (!track) return;
@@ -2407,22 +2405,21 @@
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         axis = null;
-        track.style.touchAction = 'pan-y';
       }, { passive: true });
 
       track.addEventListener('touchmove', (e) => {
         if (e.touches.length !== 1) return;
         const dx = Math.abs(e.touches[0].clientX - startX);
         const dy = Math.abs(e.touches[0].clientY - startY);
-        if (!axis && (dx > 12 || dy > 12)) {
-          axis = dx > dy * 1.25 ? 'x' : 'y';
+        if (!axis && (dx > 10 || dy > 10)) {
+          axis = dx > dy ? 'x' : 'y';
         }
-        if (axis === 'x') track.style.touchAction = 'pan-x';
-        else if (axis === 'y') track.style.touchAction = 'pan-y';
+        if (axis === 'y') track.style.touchAction = 'pan-y';
+        else if (axis === 'x') track.style.touchAction = 'pan-x';
       }, { passive: true });
 
       const resetAxis = () => {
-        track.style.touchAction = 'pan-y';
+        track.style.touchAction = '';
         axis = null;
       };
       track.addEventListener('touchend', resetAxis, { passive: true });
@@ -2431,46 +2428,9 @@
   }
 
   bindCarouselScroll([
-    methodTrack
+    methodTrack,
+    galleryTrack
   ]);
-
-  /* Galeria — no mobile, gesto horizontal não bloqueia scroll vertical da página */
-  if (galleryTrack) {
-    let gStartX = 0;
-    let gStartY = 0;
-    let gLastX = 0;
-    let gAxis = null;
-
-    galleryTrack.addEventListener('touchstart', (e) => {
-      if (!isMobile.matches || e.touches.length !== 1) return;
-      gStartX = gLastX = e.touches[0].clientX;
-      gStartY = e.touches[0].clientY;
-      gAxis = null;
-    }, { passive: true });
-
-    galleryTrack.addEventListener('touchmove', (e) => {
-      if (!isMobile.matches || e.touches.length !== 1) return;
-      const x = e.touches[0].clientX;
-      const y = e.touches[0].clientY;
-
-      if (gAxis === null) {
-        const dx = Math.abs(x - gStartX);
-        const dy = Math.abs(y - gStartY);
-        if (dx < 8 && dy < 8) return;
-        gAxis = dx > dy ? 'x' : 'y';
-      }
-
-      if (gAxis === 'x') {
-        e.preventDefault();
-        galleryTrack.scrollLeft += gLastX - x;
-        gLastX = x;
-      }
-    }, { passive: false });
-
-    const resetGalleryAxis = () => { gAxis = null; };
-    galleryTrack.addEventListener('touchend', resetGalleryAxis, { passive: true });
-    galleryTrack.addEventListener('touchcancel', resetGalleryAxis, { passive: true });
-  }
 
   /* Media: show placeholder until image or video loads */
   document.querySelectorAll('.media img').forEach(img => {
@@ -2500,15 +2460,12 @@
     };
     const onError = () => {
       video.classList.remove('loaded');
-      video.style.display = 'none';
       if (fill) fill.style.display = '';
     };
 
     video.controls = false;
     video.muted = true;
     video.defaultMuted = true;
-    video.autoplay = true;
-    video.loop = true;
     video.playsInline = true;
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
@@ -2518,29 +2475,15 @@
     video.addEventListener('error', onError);
     if (video.readyState >= 2) onReady();
 
-    const tryPlay = () => {
-      if (!video.paused) return;
-      video.play().catch(() => {});
-    };
-
-    ['loadeddata', 'canplay', 'canplaythrough'].forEach(evt => {
-      video.addEventListener(evt, tryPlay);
-    });
+    const tryPlay = () => video.play().catch(() => {});
+    tryPlay();
+    video.addEventListener('loadeddata', tryPlay);
+    video.addEventListener('canplay', tryPlay);
 
     const videoObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) tryPlay();
-      });
-    }, { threshold: 0.01, rootMargin: '0px 0px 15% 0px' });
+      entries.forEach(e => { if (e.isIntersecting) tryPlay(); });
+    }, { threshold: 0.1 });
     videoObs.observe(video);
-
-    window.addEventListener('pageshow', tryPlay);
-    document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) tryPlay();
-    });
-
-    document.addEventListener('touchstart', tryPlay, { once: true, passive: true, capture: true });
-    tryPlay();
   });
 })();
 </script>
