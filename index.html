@@ -1103,7 +1103,6 @@
     scroll-snap-stop: normal;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    touch-action: pan-x;
     scrollbar-width: none;
     gap: 12px;
     margin-inline: calc(var(--inset-l) * -1) calc(var(--inset-r) * -1);
@@ -2083,7 +2082,6 @@
     <div class="media">
       <video
         class="media-video"
-        src="fotos/clinica-materiais.mp4"
         autoplay
         muted
         loop
@@ -2094,7 +2092,9 @@
         disableremoteplayback
         tabindex="-1"
         aria-hidden="true"
-      ></video>
+      >
+        <source src="fotos/clinica-materiais.mp4" type="video/mp4">
+      </video>
       <div class="media-fill tone-deep"></div>
       <span class="media-tag">Materiais</span>
     </div>
@@ -2434,6 +2434,44 @@
     methodTrack
   ]);
 
+  /* Galeria — no mobile, gesto horizontal não bloqueia scroll vertical da página */
+  if (galleryTrack) {
+    let gStartX = 0;
+    let gStartY = 0;
+    let gLastX = 0;
+    let gAxis = null;
+
+    galleryTrack.addEventListener('touchstart', (e) => {
+      if (!isMobile.matches || e.touches.length !== 1) return;
+      gStartX = gLastX = e.touches[0].clientX;
+      gStartY = e.touches[0].clientY;
+      gAxis = null;
+    }, { passive: true });
+
+    galleryTrack.addEventListener('touchmove', (e) => {
+      if (!isMobile.matches || e.touches.length !== 1) return;
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+
+      if (gAxis === null) {
+        const dx = Math.abs(x - gStartX);
+        const dy = Math.abs(y - gStartY);
+        if (dx < 8 && dy < 8) return;
+        gAxis = dx > dy ? 'x' : 'y';
+      }
+
+      if (gAxis === 'x') {
+        e.preventDefault();
+        galleryTrack.scrollLeft += gLastX - x;
+        gLastX = x;
+      }
+    }, { passive: false });
+
+    const resetGalleryAxis = () => { gAxis = null; };
+    galleryTrack.addEventListener('touchend', resetGalleryAxis, { passive: true });
+    galleryTrack.addEventListener('touchcancel', resetGalleryAxis, { passive: true });
+  }
+
   /* Media: show placeholder until image or video loads */
   document.querySelectorAll('.media img').forEach(img => {
     const src = img.getAttribute('src');
@@ -2470,6 +2508,7 @@
     video.muted = true;
     video.defaultMuted = true;
     video.autoplay = true;
+    video.loop = true;
     video.playsInline = true;
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
@@ -2480,23 +2519,28 @@
     if (video.readyState >= 2) onReady();
 
     const tryPlay = () => {
+      if (!video.paused) return;
       video.play().catch(() => {});
     };
 
-    tryPlay();
-    video.addEventListener('loadeddata', tryPlay);
-    video.addEventListener('canplay', tryPlay);
+    ['loadeddata', 'canplay', 'canplaythrough'].forEach(evt => {
+      video.addEventListener(evt, tryPlay);
+    });
 
     const videoObs = new IntersectionObserver((entries) => {
       entries.forEach(e => {
         if (e.isIntersecting) tryPlay();
       });
-    }, { threshold: 0.15 });
+    }, { threshold: 0.01, rootMargin: '0px 0px 15% 0px' });
     videoObs.observe(video);
 
+    window.addEventListener('pageshow', tryPlay);
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) tryPlay();
     });
+
+    document.addEventListener('touchstart', tryPlay, { once: true, passive: true, capture: true });
+    tryPlay();
   });
 })();
 </script>
