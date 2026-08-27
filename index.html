@@ -7,6 +7,7 @@
 <meta name="description" content="Clínica odontológica em Taubaté com avaliação integrada, restauração, cirurgia e estética. Porque sorrir faz bem. Agende sua consulta na VILARI.">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <meta name="googlebot" content="index, follow">
+<meta name="google-site-verification" content="o-QdteLFO8SlQJguzMWL3Iy0cIHrMH2_AKSW12f5FJg">
 <meta name="author" content="VILARI Clínica Odontológica">
 <meta name="geo.region" content="BR-SP">
 <meta name="geo.placename" content="Taubaté">
@@ -1101,9 +1102,8 @@
     scroll-snap-type: x mandatory;
     scroll-snap-stop: normal;
     -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-    overscroll-behavior-y: none;
-    touch-action: pan-y;
+    overscroll-behavior: contain;
+    touch-action: pan-x;
     scrollbar-width: none;
     gap: 12px;
     margin-inline: calc(var(--inset-l) * -1) calc(var(--inset-r) * -1);
@@ -1448,10 +1448,6 @@
 
     header.scrolled {
       box-shadow: 0 1px 0 rgba(255, 255, 255, 0.45) inset, 0 1px 16px rgba(15, 20, 22, 0.04);
-    }
-
-    .gallery-track {
-      scroll-snap-type: x proximity;
     }
   }
 
@@ -2435,8 +2431,7 @@
   }
 
   bindCarouselScroll([
-    methodTrack,
-    galleryTrack
+    methodTrack
   ]);
 
   /* Media: show placeholder until image or video loads */
