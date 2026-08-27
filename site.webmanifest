@@ -1,12 +1,13 @@
 {
   "name": "VILARI Clínica Odontológica",
   "short_name": "VILARI",
-  "description": "Clínica odontológica em Taubaté — Porque sorrir faz bem.",
+  "description": "Dentista em Taubaté — clínica odontológica com avaliação integrada. Porque sorrir faz bem.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#131C22",
   "theme_color": "#131C22",
   "lang": "pt-BR",
+  "id": "https://www.vilariodontologia.com.br/",
   "icons": [
     {
       "src": "/favicon.svg",

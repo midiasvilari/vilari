@@ -7,6 +7,7 @@
 <meta name="description" content="Clínica odontológica em Taubaté com avaliação integrada, restauração, cirurgia e estética. Porque sorrir faz bem. Agende sua consulta na VILARI.">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <meta name="googlebot" content="index, follow">
+<meta name="google-site-verification" content="o-QdteLFO8SlQJguzMWL3Iy0cIHrMH2_AKSW12f5FJg">
 <meta name="author" content="VILARI Clínica Odontológica">
 <meta name="geo.region" content="BR-SP">
 <meta name="geo.placename" content="Taubaté">
@@ -417,8 +418,7 @@
   .media:has(.tone-deep) .media-tag { color: rgba(255,255,255,0.4); }
   .media img.loaded ~ .media-fill,
   .media video.loaded ~ .media-fill { display: none; }
-  .media img:not([src]), .media img[src=""],
-  .media video:not([src]), .media video[src=""] { display: none; }
+  .media img:not([src]), .media img[src=""] { display: none; }
 
   /* ── NAV ── */
   header {
@@ -1105,7 +1105,6 @@
     touch-action: manipulation;
     scrollbar-width: none;
     gap: 12px;
-    margin-inline: calc(var(--inset-l) * -1) calc(var(--inset-r) * -1);
     padding-inline: var(--inset-l) var(--inset-r);
     padding-bottom: 4px;
     scroll-padding-inline-start: var(--inset-l);
@@ -1113,7 +1112,7 @@
   }
   .gallery-track::-webkit-scrollbar { display: none; }
   .gallery-slide {
-    flex: 0 0 min(72vw, 280px);
+    flex: 0 0 min(82vw, 300px);
     scroll-snap-align: start;
     margin: 0;
   }
@@ -1409,12 +1408,20 @@
       font-size: 0.5625rem;
       letter-spacing: 0.18em;
     }
-    .hero-arc {
-      top: 6%;
-      right: -38%;
-      width: min(105vw, 380px);
-      height: min(105vw, 380px);
-      opacity: 0.65;
+    .hero-glow {
+      top: -12%;
+      right: -25%;
+      width: 70vw;
+      height: 55vw;
+      filter: blur(40px);
+      opacity: 0.85;
+    }
+    .hero-arc,
+    .hero-arc--secondary { display: none; }
+    .hero-line-accent {
+      top: 18%;
+      height: 64px;
+      opacity: 0.7;
     }
     .hero-actions .btn-hero { border-radius: 12px; min-height: 52px; }
     .hero-actions .link:active { opacity: 0.65; }
@@ -2079,6 +2086,7 @@
         muted
         loop
         playsinline
+        webkit-playsinline
         preload="auto"
         disablepictureinpicture
         disableremoteplayback
@@ -2384,7 +2392,7 @@
   isDesktopNav.addEventListener('change', bindMethodInteraction);
   if (reduced) steps.forEach(s => s.classList.add('active'));
 
-  /* Carrosséis — não bloquear scroll vertical no mobile */
+  /* Carrosséis — priorizar scroll vertical da página no mobile */
   function bindCarouselScroll(tracks) {
     tracks.forEach(track => {
       if (!track) return;
@@ -2397,21 +2405,22 @@
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
         axis = null;
+        track.style.touchAction = 'pan-y';
       }, { passive: true });
 
       track.addEventListener('touchmove', (e) => {
         if (e.touches.length !== 1) return;
         const dx = Math.abs(e.touches[0].clientX - startX);
         const dy = Math.abs(e.touches[0].clientY - startY);
-        if (!axis && (dx > 10 || dy > 10)) {
-          axis = dx > dy ? 'x' : 'y';
+        if (!axis && (dx > 12 || dy > 12)) {
+          axis = dx > dy * 1.25 ? 'x' : 'y';
         }
-        if (axis === 'y') track.style.touchAction = 'pan-y';
-        else if (axis === 'x') track.style.touchAction = 'pan-x';
+        if (axis === 'x') track.style.touchAction = 'pan-x';
+        else if (axis === 'y') track.style.touchAction = 'pan-y';
       }, { passive: true });
 
       const resetAxis = () => {
-        track.style.touchAction = '';
+        track.style.touchAction = 'pan-y';
         axis = null;
       };
       track.addEventListener('touchend', resetAxis, { passive: true });
@@ -2420,9 +2429,46 @@
   }
 
   bindCarouselScroll([
-    methodTrack,
-    galleryTrack
+    methodTrack
   ]);
+
+  /* Galeria — no mobile, gesto horizontal não bloqueia scroll vertical da página */
+  if (galleryTrack) {
+    let gStartX = 0;
+    let gStartY = 0;
+    let gLastX = 0;
+    let gAxis = null;
+
+    galleryTrack.addEventListener('touchstart', (e) => {
+      if (!isMobile.matches || e.touches.length !== 1) return;
+      gStartX = gLastX = e.touches[0].clientX;
+      gStartY = e.touches[0].clientY;
+      gAxis = null;
+    }, { passive: true });
+
+    galleryTrack.addEventListener('touchmove', (e) => {
+      if (!isMobile.matches || e.touches.length !== 1) return;
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+
+      if (gAxis === null) {
+        const dx = Math.abs(x - gStartX);
+        const dy = Math.abs(y - gStartY);
+        if (dx < 8 && dy < 8) return;
+        gAxis = dx > dy ? 'x' : 'y';
+      }
+
+      if (gAxis === 'x') {
+        e.preventDefault();
+        galleryTrack.scrollLeft += gLastX - x;
+        gLastX = x;
+      }
+    }, { passive: false });
+
+    const resetGalleryAxis = () => { gAxis = null; };
+    galleryTrack.addEventListener('touchend', resetGalleryAxis, { passive: true });
+    galleryTrack.addEventListener('touchcancel', resetGalleryAxis, { passive: true });
+  }
 
   /* Media: show placeholder until image or video loads */
   document.querySelectorAll('.media img').forEach(img => {
@@ -2459,16 +2505,40 @@
     video.controls = false;
     video.muted = true;
     video.defaultMuted = true;
+    video.autoplay = true;
+    video.loop = true;
     video.playsInline = true;
     video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', '');
 
     video.addEventListener('loadeddata', onReady);
     video.addEventListener('error', onError);
     if (video.readyState >= 2) onReady();
 
-    const keepPlaying = () => video.play().catch(() => {});
-    keepPlaying();
-    video.addEventListener('loadeddata', keepPlaying);
+    const tryPlay = () => {
+      if (!video.paused) return;
+      video.play().catch(() => {});
+    };
+
+    ['loadeddata', 'canplay', 'canplaythrough'].forEach(evt => {
+      video.addEventListener(evt, tryPlay);
+    });
+
+    const videoObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) tryPlay();
+      });
+    }, { threshold: 0.01, rootMargin: '0px 0px 15% 0px' });
+    videoObs.observe(video);
+
+    window.addEventListener('pageshow', tryPlay);
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) tryPlay();
+    });
+
+    document.addEventListener('touchstart', tryPlay, { once: true, passive: true, capture: true });
+    tryPlay();
   });
 })();
 </script>

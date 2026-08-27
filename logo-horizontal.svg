@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" role="img" aria-label="VILARI  Clínica Odontológica · Dentista em Taubaté">
+  <title>VILARI Clínica Odontológica · Dentista em Taubaté</title>
+  <defs>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@500;600&amp;display=swap");
+      .wm {
+        font-family: Inter, "Inter Variable", system-ui, sans-serif;
+        font-weight: 600;
+        font-size: 72px;
+        letter-spacing: 16px;
+        fill: #EDEAE4;
+      }
+      .sub {
+        font-family: Inter, "Inter Variable", system-ui, sans-serif;
+        font-weight: 500;
+        font-size: 13px;
+        letter-spacing: 3.2px;
+        fill: #A8A49C;
+      }
+    </style>
+  </defs>
+
+  <rect width="1280" height="360" fill="#131C22"/>
+
+  <g transform="translate(168 180)" fill="none" stroke="#EDEAE4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M -38 -44 L 0 48 L 38 -44" stroke-width="6.5"/>
+    <path d="M -32 70 C -16 86, 16 86, 32 70" stroke-width="2.75"/>
+  </g>
+
+  <text class="wm" x="268" y="178">VILARI</text>
+  <line x1="268" y1="208" x2="980" y2="208" stroke="#EDEAE4" stroke-width="0.75" stroke-opacity="0.28"/>
+  <text class="sub" x="268" y="242">CLÍNICA ODONTOLÓGICA · DENTISTA EM TAUBATÉ</text>
+</svg>

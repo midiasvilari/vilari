@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://vilari.vercel.app/sitemap.xml
+Disallow: /vilari-landing-v2.html
+
+Sitemap: https://www.vilariodontologia.com.br/sitemap.xml
